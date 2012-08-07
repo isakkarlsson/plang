@@ -1,0 +1,3 @@
+identifier(identifier(X)) --> [X], {atom(X)}.
+number(number(X)) --> [X], {number(X)}.
+
