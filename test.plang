@@ -1,4 +1,0 @@
-do
-	isak := 10 + 10;
-	print isak * int(read);
-end
