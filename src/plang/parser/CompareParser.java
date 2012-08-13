@@ -13,6 +13,16 @@ import plang.parser.tokenizer.token.DefaultTokenType;
 import plang.parser.tokenizer.token.Token;
 import plang.parser.tokenizer.token.TokenType;
 
+/**
+ * Parse a comparsion
+ * 
+ * <pre>
+ * compare ::= expr '<' expr | expr '>' expr | expr '<=' expr | expr '>=' expr
+ * </pre>
+ * 
+ * @author Isak Karlsson
+ *
+ */
 public class CompareParser extends ExpressionParser {
 
     public static final Set<TokenType> OPERATORS = Collections

@@ -8,6 +8,14 @@ import plang.parser.tokenizer.token.Token;
 import plang.util.MessageHandler;
 import plang.util.MessageType;
 
+/**
+ * Abstract helper for implementing {@link Parser}s
+ * 
+ * @author Isak Karlsson
+ * 
+ * @param <T>
+ *            the type to be returned from parse
+ */
 public abstract class AbstractParser<T extends Node> implements Parser {
 
     private Tokenizer tokenizer;
@@ -17,11 +25,12 @@ public abstract class AbstractParser<T extends Node> implements Parser {
     private boolean failed;
 
     /**
-     * Construct a parser using a tokenizer and a message handler
+     * Construct a parser using a tokenizer, message handler and factories
      * 
      * @param tokenizer
      * @param nodeFactory
      * @param messageHandler
+     * @param parserFactory
      */
     public AbstractParser(Tokenizer tokenizer, NodeFactory nodeFactory,
             ParserFactory parserFactory, MessageHandler messageHandler) {
@@ -33,7 +42,7 @@ public abstract class AbstractParser<T extends Node> implements Parser {
 
     /**
      * Construct a parser from another {@link AbstractParser} and use its
-     * tokenizer and message handler
+     * tokenizer and message handler and factories
      * 
      * @param parser
      */
@@ -149,12 +158,12 @@ public abstract class AbstractParser<T extends Node> implements Parser {
 
     /**
      * Most likely return a node of type <code>T</code>, but
-     * {@link #optimize(Node)} might change that (to any suitable type)
+     * {@link #optimize(Node)} might change that (to any suitable subtype)
      * 
-     * Don't rely on casting (which is most likely not useful)
+     * Don't rely on casting (which is most likely not useful).
      * 
      * Don't override! Use {@link #executeParse(Token)} instead to gain
-     * optimization using {@link #optimize(Node)}
+     * optimization using {@link #optimize(Node)}.
      * 
      * @return a node if {@link #hasFailed()} == false otherwise null
      */
@@ -175,12 +184,20 @@ public abstract class AbstractParser<T extends Node> implements Parser {
         return parse(getTokenizer().next());
     }
 
+    /**
+     * Consume <code>n</code> nodes
+     * 
+     * @param n
+     */
     protected void consume(int n) {
         for (int i = 0; i < n; i++) {
             getTokenizer().next();
         }
     }
 
+    /**
+     * Consume 1 node
+     */
     protected void consume() {
         getTokenizer().next();
     }
@@ -190,7 +207,7 @@ public abstract class AbstractParser<T extends Node> implements Parser {
      * 
      * E.g. is {@link ExpressionParser} optimized to return an instance of
      * {@link TermNode} if {@link ExpressionNode#getRight()} is
-     * <code>null</code>
+     * <code>null</code>.
      * 
      * This pattern should be used to improve interpretation speed.
      * 

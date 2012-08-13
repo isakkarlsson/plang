@@ -9,6 +9,24 @@ import plang.parser.tokenizer.token.Token;
 import plang.util.Message;
 import plang.util.MessageHandler;
 
+/**
+ * Parse a list of statements<br>
+ * 
+ * <pre>
+ * statements ::= 'do' statement {, [statement]} 'end'
+ * </pre>
+ * 
+ * Example:<br>
+ * 
+ * <pre>
+ * do
+ *  print 10;
+ * end
+ * </pre>
+ * 
+ * @author Isak Karlsson
+ * 
+ */
 public class StatementsParser extends AbstractParser<StatementsNode> {
 
     public StatementsParser(Tokenizer tokenizer, NodeFactory nodeFactory,

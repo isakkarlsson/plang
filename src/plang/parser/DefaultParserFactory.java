@@ -1,5 +1,11 @@
 package plang.parser;
 
+/**
+ * Default implementation of {@link ParserFactory}.
+ * 
+ * @author Isak Karlsson
+ * 
+ */
 public class DefaultParserFactory implements ParserFactory {
 
     @Override

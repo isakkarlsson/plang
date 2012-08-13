@@ -16,7 +16,7 @@ public class CompareNode extends ExpressionNode {
 
     @Override
     public Object interpret(Interpreter interpreter) {
-        return super.interpret(interpreter);
+        return interpreter.interpretCompare(this);
     }
 
 }

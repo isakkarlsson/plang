@@ -21,7 +21,9 @@ public interface Parser {
      * parser that failed is supposed to handle error reporting.
      * 
      * A call to parse should consume _all_ tokens required so that a the
-     * current token is the last token _not_ used
+     * current token is the last _not_ used token. This is vital for the
+     * process.
+     * 
      * 
      * @param start
      * @return a {@link Node} on success or <code>null</code> if parsing fail

@@ -9,8 +9,8 @@ package plang.parser.tokenizer.token;
 public interface TokenType {
 
     /**
-     * Get the value for this token type (i.e. the string representation COLON =
-     * "=")
+     * Get the value for this token type (i.e. the string representation. E.g:
+     * EQUAL = "=")
      * 
      * @return
      */

@@ -9,7 +9,7 @@ import plang.parser.tokenizer.token.Token;
  * Parse a list of expressions
  * 
  * <pre>
- * 
+ * expressions ::= expr {, [ expr ] }
  * </pre>
  * 
  * @author isak

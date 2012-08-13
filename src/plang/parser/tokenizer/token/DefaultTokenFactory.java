@@ -1,8 +1,16 @@
 package plang.parser.tokenizer.token;
 
+/**
+ * Default implementation of {@link TokenFactory}.
+ * 
+ * Returns instances of {@link DefaultToken}.
+ * 
+ * @author Isak Karlsson
+ * 
+ */
 public class DefaultTokenFactory implements TokenFactory {
     @Override
-    public DefaultToken number(String value, int line, int position) {
+    public Token number(String value, int line, int position) {
         Number number = null;
         try {
             number = Integer.parseInt(value);
@@ -22,7 +30,7 @@ public class DefaultTokenFactory implements TokenFactory {
     }
 
     @Override
-    public DefaultToken identifier(String value, int line, int position) {
+    public Token identifier(String value, int line, int position) {
         TokenType type = DefaultTokenType.getKeyword(value);
         if (type == null) {
             type = DefaultTokenType.IDENTIFIER;
@@ -32,13 +40,13 @@ public class DefaultTokenFactory implements TokenFactory {
     }
 
     @Override
-    public DefaultToken error(int line, int position) {
+    public Token error(int line, int position) {
         return new DefaultToken("", "<ERROR>", line, position,
                 DefaultTokenType.ERROR);
     }
 
     @Override
-    public DefaultToken eof(int line, int position) {
+    public Token eof(int line, int position) {
         return new DefaultToken("", "<EOF>", line, position,
                 DefaultTokenType.EOF);
     }

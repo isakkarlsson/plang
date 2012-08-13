@@ -9,6 +9,7 @@ import java.util.Scanner;
 
 import plang.parser.ast.AssignmentNode;
 import plang.parser.ast.CallNode;
+import plang.parser.ast.CompareNode;
 import plang.parser.ast.ExpressionNode;
 import plang.parser.ast.ExpressionsNode;
 import plang.parser.ast.IdentifierNode;
@@ -20,6 +21,15 @@ import plang.parser.ast.PrintNode;
 import plang.parser.ast.ReadNode;
 import plang.parser.ast.StatementsNode;
 
+/**
+ * Very lazy implementation. Just a stub. Don't handle scopes, error messages
+ * etc.
+ * 
+ * TODO: Implement those
+ * 
+ * @author Isak Karlsson
+ * 
+ */
 public class DefaultInterpreter implements Interpreter {
 
     private abstract class Func {
@@ -63,6 +73,46 @@ public class DefaultInterpreter implements Interpreter {
             @Override
             public Object call(Object l, Object r) {
                 return ((Number) l).intValue() / ((Number) r).intValue();
+            }
+        });
+
+        builtins.put("__lt__", new Func() {
+
+            @Override
+            public Object call(Object l, Object r) {
+                return ((Number) l).intValue() < ((Number) r).intValue();
+            }
+        });
+
+        builtins.put("__gt__", new Func() {
+
+            @Override
+            public Object call(Object l, Object r) {
+                return ((Number) l).intValue() > ((Number) r).intValue();
+            }
+        });
+
+        builtins.put("__lte__", new Func() {
+
+            @Override
+            public Object call(Object l, Object r) {
+                return ((Number) l).intValue() <= ((Number) r).intValue();
+            }
+        });
+
+        builtins.put("__gte__", new Func() {
+
+            @Override
+            public Object call(Object l, Object r) {
+                return ((Number) l).intValue() >= ((Number) r).intValue();
+            }
+        });
+
+        builtins.put("__eq__", new Func() {
+
+            @Override
+            public Object call(Object l, Object r) {
+                return ((Number) l).intValue() == ((Number) r).intValue();
             }
         });
 
@@ -138,6 +188,7 @@ public class DefaultInterpreter implements Interpreter {
         return objs;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Object interpretCall(CallNode node) {
         String name = (String) interpret(node.getIdentifier());
@@ -155,7 +206,12 @@ public class DefaultInterpreter implements Interpreter {
 
     @Override
     public Object interpretIf(IfNode node) {
-        return null;
+        boolean compare = (Boolean) interpret(node.getCompare());
+        if (compare) {
+            return interpret(node.getTrue());
+        } else {
+            return interpret(node.getFalse());
+        }
     }
 
     @Override
@@ -165,6 +221,11 @@ public class DefaultInterpreter implements Interpreter {
         }
 
         return null;
+    }
+
+    @Override
+    public Object interpretCompare(CompareNode node) {
+        return interpretExpression(node);
     }
 
 }

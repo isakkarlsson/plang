@@ -1,4 +1,11 @@
 do
 	isak := 10 + 10;
-	print isak * int(read);
+	
+	if isak > 20 do 
+		print isak; 
+	end else do 
+		print 200; 
+	end	
+	
+	
 end

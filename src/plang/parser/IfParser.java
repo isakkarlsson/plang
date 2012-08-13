@@ -6,6 +6,16 @@ import plang.parser.tokenizer.token.DefaultTokenType;
 import plang.parser.tokenizer.token.Token;
 import plang.util.Message;
 
+/**
+ * Parse an if-statement
+ * 
+ * <pre>
+ * if ::= 'if' compare statements { 'else' statements }
+ * </pre>
+ * 
+ * @author isak
+ * 
+ */
 public class IfParser extends AbstractParser<IfNode> {
 
     public IfParser(AbstractParser<?> parser) {

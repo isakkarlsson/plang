@@ -1,5 +1,11 @@
 package plang.parser.tokenizer.token;
 
+/**
+ * Construct the basic tokens.
+ * 
+ * @author Isak Karlsson
+ * 
+ */
 public interface TokenFactory {
 
     /**

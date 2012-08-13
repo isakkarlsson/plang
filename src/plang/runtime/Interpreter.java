@@ -2,6 +2,7 @@ package plang.runtime;
 
 import plang.parser.ast.AssignmentNode;
 import plang.parser.ast.CallNode;
+import plang.parser.ast.CompareNode;
 import plang.parser.ast.ExpressionNode;
 import plang.parser.ast.ExpressionsNode;
 import plang.parser.ast.IdentifierNode;
@@ -12,6 +13,12 @@ import plang.parser.ast.PrintNode;
 import plang.parser.ast.ReadNode;
 import plang.parser.ast.StatementsNode;
 
+/**
+ * Read: http://en.wikipedia.org/wiki/Visitor_pattern
+ * 
+ * @author Isak Karlsson
+ * 
+ */
 public interface Interpreter {
 
     /**
@@ -57,16 +64,60 @@ public interface Interpreter {
      */
     Object interpretExpression(ExpressionNode node);
 
+    /**
+     * Interpret the read keyword
+     * 
+     * @param node
+     * @return
+     */
     Object interpretRead(ReadNode node);
 
+    /**
+     * Interpret the print keyword
+     * 
+     * @param node
+     * @return
+     */
     Object interpretPrint(PrintNode node);
 
+    /**
+     * Interpret a list of expressions
+     * 
+     * @param node
+     * @return
+     */
     Object interpretExpressions(ExpressionsNode node);
 
+    /**
+     * Interpret a call
+     * 
+     * @param node
+     * @return
+     */
     Object interpretCall(CallNode node);
 
+    /**
+     * Interpret an if statement
+     * 
+     * @param node
+     * @return
+     */
     Object interpretIf(IfNode node);
 
+    /**
+     * Interpret a list of statements
+     * 
+     * @param node
+     * @return
+     */
     Object interpretStatements(StatementsNode node);
+
+    /**
+     * Interpret a comparison
+     * 
+     * @param node
+     * @return
+     */
+    Object interpretCompare(CompareNode node);
 
 }

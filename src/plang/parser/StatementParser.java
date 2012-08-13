@@ -1,19 +1,24 @@
 package plang.parser;
 
 import plang.parser.ast.Node;
-import plang.parser.ast.NodeFactory;
 import plang.parser.ast.PrintNode;
-import plang.parser.tokenizer.Tokenizer;
 import plang.parser.tokenizer.token.DefaultTokenType;
 import plang.parser.tokenizer.token.Token;
 import plang.util.Message;
-import plang.util.MessageHandler;
 
 /**
  * Parses a statement
  * 
  * <pre>
  * statement ::= assignment | print | while | if
+ * </pre>
+ * 
+ * 
+ * Example:<br>
+ * 
+ * <pre>
+ * print 10;
+ * a := 10 + int(read);
  * </pre>
  * 
  * @author Isak Karlsson
@@ -23,11 +28,6 @@ public class StatementParser extends AbstractParser<Node> {
 
     public StatementParser(AbstractParser<?> parser) {
         super(parser);
-    }
-
-    public StatementParser(Tokenizer tokenizer, NodeFactory nodeFactory,
-            ParserFactory parserFactory, MessageHandler messageHandler) {
-        super(tokenizer, nodeFactory, parserFactory, messageHandler);
     }
 
     @Override
