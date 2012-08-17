@@ -14,7 +14,7 @@ import plang.util.MessageHandler;
 public class DefaultTokenIdentifier extends TokenIdentifier {
 
     public static Set<Character> OPERATORS = new HashSet<Character>(
-            Arrays.asList('<', '>', '=', ':', '*', '/', '+', '-'));
+            Arrays.asList('<', '>', '=', ':', '*', '/', '+', '-', '_'));
 
     public static Set<Character> SINGLETON = new HashSet<Character>(
             Arrays.asList('(', ')', ',', ';'));

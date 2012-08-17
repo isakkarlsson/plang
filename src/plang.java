@@ -15,6 +15,7 @@ import plang.parser.tokenizer.TokenIdentifier;
 import plang.parser.tokenizer.Tokenizer;
 import plang.parser.tokenizer.token.DefaultTokenFactory;
 import plang.runtime.DefaultInterpreter;
+import plang.runtime.DefaultStackFactory;
 import plang.runtime.Interpreter;
 import plang.util.MessageHandler;
 import plang.util.PrintStreamMessageListener;
@@ -37,7 +38,7 @@ public class plang {
      */
     public static void main(String[] args) throws Exception {
         if (args.length < 1) {
-            System.out.println("Usage: java plang file.plang");
+            System.out.println("Usage: java -jar plang.jar file.plang");
             return;
         }
 
@@ -77,11 +78,11 @@ public class plang {
         // Interpret the constructed node
         // Change or edit the interpreter to change how things are handled (i.e.
         // some of the semantics)
-        Interpreter inter = new DefaultInterpreter();
-        inter.interpret(node);
+        Interpreter interpreter = new DefaultInterpreter(new DefaultStackFactory());
+        interpreter.interpret(node);
 
         // If the parsing was successful print the string representation of the
-        // abstract syntax tree
+        // abstract syntax tree (for debugging)
         if (node != null) {
             System.out.println("      AST \n================");
             System.out.println(node.toTree());

@@ -1,10 +1,8 @@
 package plang.runtime;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
 import plang.parser.ast.AssignmentNode;
@@ -32,43 +30,37 @@ import plang.parser.ast.StatementsNode;
  */
 public class DefaultInterpreter implements Interpreter {
 
-    private abstract class Func {
-        Object call(Object l, Object r) {
-            return call(l, r);
-        }
+    private Scanner sc = new Scanner(System.in);
+    private Stack stack;
+    private StackFactory stackFactory;
 
-        Object call(Object... args) {
-            return null;
-        }
-    }
+    public DefaultInterpreter(StackFactory factory) {
+        stackFactory = factory;
+        stack = getStackFactory().getStack();
+        StackFrame builtins = getStackFactory().getStackFrame();
 
-    private Map<String, Object> variables = new HashMap<String, Object>();
-    private Map<String, Func> builtins = new HashMap<String, Func>();
-    Scanner sc = new Scanner(System.in);
-
-    public DefaultInterpreter() {
-        builtins.put("__add__", new Func() {
+        builtins.enter("__add__", new AbstractFunction() {
 
             @Override
             public Object call(Object l, Object r) {
                 return ((Number) l).intValue() + ((Number) r).intValue();
             }
         });
-        builtins.put("__sub__", new Func() {
+        builtins.enter("__sub__", new AbstractFunction() {
 
             @Override
             public Object call(Object l, Object r) {
                 return ((Number) l).intValue() - ((Number) r).intValue();
             }
         });
-        builtins.put("__mul__", new Func() {
+        builtins.enter("__mul__", new AbstractFunction() {
 
             @Override
             public Object call(Object l, Object r) {
                 return ((Number) l).intValue() * ((Number) r).intValue();
             }
         });
-        builtins.put("__div__", new Func() {
+        builtins.enter("__div__", new AbstractFunction() {
 
             @Override
             public Object call(Object l, Object r) {
@@ -76,7 +68,7 @@ public class DefaultInterpreter implements Interpreter {
             }
         });
 
-        builtins.put("__lt__", new Func() {
+        builtins.enter("__lt__", new AbstractFunction() {
 
             @Override
             public Object call(Object l, Object r) {
@@ -84,7 +76,7 @@ public class DefaultInterpreter implements Interpreter {
             }
         });
 
-        builtins.put("__gt__", new Func() {
+        builtins.enter("__gt__", new AbstractFunction() {
 
             @Override
             public Object call(Object l, Object r) {
@@ -92,7 +84,7 @@ public class DefaultInterpreter implements Interpreter {
             }
         });
 
-        builtins.put("__lte__", new Func() {
+        builtins.enter("__lte__", new AbstractFunction() {
 
             @Override
             public Object call(Object l, Object r) {
@@ -100,7 +92,7 @@ public class DefaultInterpreter implements Interpreter {
             }
         });
 
-        builtins.put("__gte__", new Func() {
+        builtins.enter("__gte__", new AbstractFunction() {
 
             @Override
             public Object call(Object l, Object r) {
@@ -108,7 +100,7 @@ public class DefaultInterpreter implements Interpreter {
             }
         });
 
-        builtins.put("__eq__", new Func() {
+        builtins.enter("__eq__", new AbstractFunction() {
 
             @Override
             public Object call(Object l, Object r) {
@@ -116,12 +108,22 @@ public class DefaultInterpreter implements Interpreter {
             }
         });
 
-        builtins.put("int", new Func() {
+        builtins.enter("int", new AbstractFunction() {
             @Override
-            Object call(Object... args) {
+            public Object call(Object... args) {
                 return Integer.parseInt((String) args[0]);
             }
         });
+
+        getStack().push(builtins);
+    }
+
+    protected Stack getStack() {
+        return stack;
+    }
+
+    protected StackFactory getStackFactory() {
+        return stackFactory;
     }
 
     @Override
@@ -137,7 +139,7 @@ public class DefaultInterpreter implements Interpreter {
         String name = (String) interpret(node.getIdentifier());
         Object value = interpret(node.getValue());
 
-        variables.put(name, value);
+        getStack().enter(name, value);
 
         return null;
     }
@@ -148,7 +150,7 @@ public class DefaultInterpreter implements Interpreter {
             return node.getValue();
         }
 
-        return variables.get(node.getValue());
+        return getStack().lookup(node.getValue());
     }
 
     @Override
@@ -162,9 +164,7 @@ public class DefaultInterpreter implements Interpreter {
         Object rhs = interpret(node.getRight());
         Operator op = node.getOperator();
 
-        Func f = builtins.get(op.getOperation());
-
-        return f.call(lhs, rhs);
+        return lookupFunction(op.getOperation()).call(lhs, rhs);
     }
 
     @Override
@@ -201,17 +201,23 @@ public class DefaultInterpreter implements Interpreter {
         } else {
             args.add(obj);
         }
-        return builtins.get(name).call(args.toArray(new Object[0]));
+
+        return lookupFunction(name).call(args.toArray(new Object[0]));
     }
 
     @Override
     public Object interpretIf(IfNode node) {
         boolean compare = (Boolean) interpret(node.getCompare());
+        getStack().push(getStackFactory().getStackFrame());
+
         if (compare) {
-            return interpret(node.getTrue());
+            interpret(node.getTrue());
         } else {
-            return interpret(node.getFalse());
+            interpret(node.getFalse());
         }
+        getStack().pop();
+
+        return null;
     }
 
     @Override
@@ -226,6 +232,15 @@ public class DefaultInterpreter implements Interpreter {
     @Override
     public Object interpretCompare(CompareNode node) {
         return interpretExpression(node);
+    }
+
+    protected Function lookupFunction(String name) {
+        Object f = getStack().lookup(name);
+        if (!(f instanceof Function)) {
+            throw new RuntimeException(String.format("%s is not a function!",
+                    name));
+        }
+        return (Function) f;
     }
 
 }

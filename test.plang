@@ -1,6 +1,6 @@
 do
-	isak := 10 + 10;
-	
+	isak := 10;
+	print 10 + 10 * 10 + 10;
 	if isak > 20 do 
 		print isak; 
 	end else do 
